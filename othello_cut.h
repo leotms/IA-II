@@ -45,7 +45,8 @@ const int cols[][7] = {
     { 7,13, 1, 3,27,33,-1 }, { 8,14,18,22,28,34,-1 }, { 9,15,19,23,29,35,-1 },
     { 4,10,16,20,24,30,-1 }, { 5,11,17,21,25,31,-1 }, { 6,12, 0, 2,26,32,-1 },
     { 7,13, 1, 3,27,33,-1 }, { 8,14,18,22,28,34,-1 }, { 9,15,19,23,29,35,-1 },
-    { 4,10,16,20,24,30,-1 }, { 5,11,17,21,25,31,-1 },
+    { 4,10,16,20,24
+        ,30,-1 }, { 5,11,17,21,25,31,-1 },
     { 8,14,18,22,28,34,-1 }, { 9,15,19,23,29,35,-1 },
     { 4,10,16,20,24,30,-1 }, { 5,11,17,21,25,31,-1 },
     { 8,14,18,22,28,34,-1 }, { 9,15,19,23,29,35,-1 },
@@ -200,6 +201,30 @@ inline bool state_t::outflank(bool color, int pos) const {
 
     // [CHECK OVER DIAGONALS REMOVED]
 
+    // Check columns
+    x = dia1[pos - 4];
+    while( *x != pos ) ++x;
+    if( *(x+1) != -1 ) {
+        for( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p );
+        if( (p > x + 1) && (*p != -1) && !is_free(*p) ) return true;
+    }
+    if( x != dia1[pos - 4] ) {
+        for( p = x - 1; (p >= dia1[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
+        if( (p < x - 1) && (p >= dia1[pos - 4]) && !is_free(*p) ) return true;
+    }
+
+    // Check columns
+    x = dia2[pos - 4];
+    while( *x != pos ) ++x;
+    if( *(x+1) != -1 ) {
+        for( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p );
+        if( (p > x + 1) && (*p != -1) && !is_free(*p) ) return true;
+    }
+    if( x != dia2[pos - 4] ) {
+        for( p = x - 1; (p >= dia2[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
+        if( (p < x - 1) && (p >= dia2[pos - 4]) && !is_free(*p) ) return true;
+    }
+
     return false;
 }
 
@@ -263,6 +288,38 @@ inline state_t state_t::move(bool color, int pos) const {
     }
 
     // [PROCESS OF DIAGONALS REMOVED]
+
+        // Process columns
+    x = dia1[pos - 4];
+    while( *x != pos ) ++x;
+    if( *(x+1) != -1 ) {
+        for( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p );
+        if( (p > x + 1) && (*p != -1) && !is_free(*p) ) {
+            for( const int *q = x + 1; q < p; ++q ) s.set_color(color, *q);
+        }
+    }
+    if( x != dia1[pos - 4] ) {
+        for( p = x - 1; (p >= dia1[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
+        if( (p < x - 1) && (p >= dia1[pos - 4]) && !is_free(*p) ) {
+            for( const int *q = x - 1; q > p; --q ) s.set_color(color, *q);
+        }
+    }
+
+        // Process columns
+    x = dia2[pos - 4];
+    while( *x != pos ) ++x;
+    if( *(x+1) != -1 ) {
+        for( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p );
+        if( (p > x + 1) && (*p != -1) && !is_free(*p) ) {
+            for( const int *q = x + 1; q < p; ++q ) s.set_color(color, *q);
+        }
+    }
+    if( x != dia2[pos - 4] ) {
+        for( p = x - 1; (p >= dia2[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
+        if( (p < x - 1) && (p >= dia2[pos - 4]) && !is_free(*p) ) {
+            for( const int *q = x - 1; q > p; --q ) s.set_color(color, *q);
+        }
+    }
 
     return s;
 }
