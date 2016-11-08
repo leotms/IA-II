@@ -135,6 +135,7 @@ class state_t {
         return valid_moves.empty() ? -1 : valid_moves[lrand48() % valid_moves.size()];
     }
 
+
     bool operator<(const state_t &s) const {
         return (free_ < s.free_) || ((free_ == s.free_) && (pos_ < s.pos_));
     }
@@ -198,8 +199,6 @@ inline bool state_t::outflank(bool color, int pos) const {
         for( p = x - 1; (p >= cols[pos - 4]) && !is_free(*p) && (color ^ is_black(*p)); --p );
         if( (p < x - 1) && (p >= cols[pos - 4]) && !is_free(*p) ) return true;
     }
-
-    // [CHECK OVER DIAGONALS REMOVED]
 
     // Check columns
     x = dia1[pos - 4];
@@ -287,9 +286,7 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
-    // [PROCESS OF DIAGONALS REMOVED]
-
-        // Process columns
+    // Process columns
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
