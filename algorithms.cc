@@ -105,7 +105,7 @@ int scout(state_t state, int depth){
 	}
 
 	int  score = 0;
-    bool black = depth % 2 == 0; // black moves first!
+    bool black = depth % 2 == 0; 
     std::vector<state_t> children = get_children(state, black);
 
     int nchildren = children.size();
@@ -139,7 +139,7 @@ bool TEST(state_t state, int depth, int score, int condition){
 		
 	}
 
-  	bool black = depth % 2 == 0; // black moves first!
+  	bool black = depth % 2 == 0;
     std::vector<state_t> children = get_children(state, black);
 
     int nchildren = children.size();

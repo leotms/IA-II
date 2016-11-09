@@ -183,7 +183,64 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
     
 }
 
-int scout(state_t state, int depth, int color, bool use_tt = false);
+// Condition 0 = >, 1 = >=
+bool TEST(state_t state, int depth, int score, bool color, int condition){
+    if (state.terminal()){
+        if (condition==0){
+            return state.value() > score ? true : false;
+        }else if(condition==1){
+            return state.value() >= score ? true : false;   
+        } 
+        
+    }
+
+    std::vector<state_t> children = get_children(state, color);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        if (color && TEST(child,depth - 1, score, !color, 0)){
+            return true;
+        }
+        if (!color && !TEST(child,depth - 1, score, !color, 0)){
+            return false;
+        }
+    }
+
+    return !color;
+    
+}
+
+int scout(state_t state, int depth, bool color, bool use_tt = false) {
+    if (state.terminal()){
+        return state.value();
+    }
+
+    int  score = 0;
+    std::vector<state_t> children = get_children(state, color);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        if (i==0){
+            score = scout(child, depth - 1, !color, false);
+        }else{
+            if (color && TEST(child, depth - 1, score, !color, 0)){
+                score=scout(child, depth - 1, !color, false);
+            }
+            if (!color && !TEST(child, depth - 1, score,!color, 1)){
+                score=scout(child, depth - 1, !color, false);
+            }
+        }
+    }
+
+    return score;
+}
+
 int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false);
 
 int main(int argc, const char **argv) {
@@ -240,8 +297,6 @@ int main(int argc, const char **argv) {
         generated = 0;
         int color = i % 2 == 1 ? 1 : -1;
 
-        cout << pv[i] << endl;
-
         try {
             if( algorithm == 0 ) {
                 value = color * (color == 1 ? maxmin(pv[i], 0, use_tt) : minmax(pv[i], 0, use_tt));
@@ -250,7 +305,7 @@ int main(int argc, const char **argv) {
             } else if( algorithm == 2 ) {
                 value = negamax(pv[i], 0, -200, 200, color, use_tt);
             } else if( algorithm == 3 ) {
-                //value = scout(pv[i], 0, color, use_tt);
+                value = scout(pv[i], 0, color, use_tt);
             } else if( algorithm == 4 ) {
                 //value = negascout(pv[i], 0, -200, 200, color, use_tt);
             }
