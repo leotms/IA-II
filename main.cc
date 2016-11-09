@@ -79,7 +79,7 @@ int minmax(state_t state, int depth, bool use_tt = false) {
         score = min(score, maxmin(child, depth - 1, false));
     }
 
-    // if the state has no children means we can play
+    // means we cannot move, so we pass
     if (nchildren == 0) {
         score = maxmin(state, depth - 1, false);
     }
@@ -109,7 +109,7 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
         score = max(score, minmax(child, depth - 1, false));
     }
 
-    // if the state has no children means we can play
+    // means we cannot move, so we pass
     if (nchildren == 0) {
         score = minmax(state, depth - 1, false);
     }
@@ -124,25 +124,29 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
         return color * state.value();
     }
 
-    bool player = depth % 2 == 0;
+    // true for black player
+    // false for white player
+    // color 1 is for black player
+    bool player = color == 1;
 
-    expanded = expanded + 1;
+    ++expanded;
+
+    // We get the children of the player
     std::vector<state_t> children = get_children(state, player);
-
     int nchildren = children.size();
-    generated = generated + nchildren;
-
     state_t child;
 
     int alpha = INT_MIN;
 
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        ++generated;
+        alpha = max(alpha, -negamax(child, depth - 1, -color));
+    }
+
+    // means we cannot move, so we pass
     if (nchildren == 0) {
-        alpha = negamax(state, depth - 1, color, false);
-    } else {
-        for (int i = 0; i < nchildren; ++i) {
-            child = children[i];
-            alpha = max(alpha, -negamax(child, depth - 1, -color));
-        }
+        alpha = max(alpha, -negamax(state, depth - 1, -color));
     }
 
     return alpha;
