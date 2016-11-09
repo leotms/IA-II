@@ -152,39 +152,44 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
     return alpha;
 }
 
+// Implementation of NEGAMAX with alpha-beta pruning. It does not
+// use transposition tables.
 int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false){
     if (state.terminal()) {
-        int val = state.value();
-        return color * val;
+        return color * state.value();
     }
 
-    bool player = depth % 2 == 0;
+    // true for black player
+    // false for white player
+    // color 1 is for black player
+    bool player = color == 1;
 
-    expanded = expanded + 1;
+    ++expanded;
+
+    // We get the children of the player
     std::vector<state_t> children = get_children(state, player);
-
     int nchildren = children.size();
-    generated = generated + nchildren;
-
     state_t child;
+
     int score = INT_MIN;
 
-    if (nchildren == 0) {
-        score = negamax(state, depth - 1, beta, alpha, color, false);
-    } else {
-        for (int i = 0; i < nchildren; ++i) {
-            child =  children[i];
-            int val = -negamax(child, depth - 1, -beta, -alpha, -color, false);
-            score = max(score, val);
-            alpha = max(alpha, val);
-            if(alpha >= beta){
-                break;
-            }
+    for (int i = 0; i < nchildren; ++i) {
+        child =  children[i];
+        ++generated;
+        int val = -negamax(child, depth - 1, -beta, -alpha, -color, false);
+        score = max(score, val);
+        alpha = max(alpha, val);
+        if(alpha >= beta){
+            break;
         }
     }
 
-    return score;
+    if (nchildren == 0) {
+      int val = -negamax(state, depth - 1, -beta, -alpha, -color, false);
+      score = max(score, val);
+    }
 
+    return score;
 }
 
 // Condition 0 = >, 1 = >=
