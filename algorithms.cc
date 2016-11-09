@@ -100,42 +100,96 @@ int negamax_ab(state_t state, int depth, int alpha, int beta, int color){
 }
 
 int scout(state_t state, int depth){
-	if (depth == 0 || state.terminal()){
-		return h(node);
+	if (state.terminal()){
+		return state.value();
 	}
 
-	int score = MAXINT;
-	foreach child of node {
-		if (child is first child){
-			score = scout(child, depth - 1);
-		}
-		else{
-			if(node is Max && TEST(child, score, >)){
-				score := scout(child, depth - 1);
-			}
-			if(node is Min && !TEST(child, score, >=)){
-				score := scout(child, depth - 1);
-			}
-		}
-	}
+	int  score = 0;
+    bool black = depth % 2 == 0; // black moves first!
+    std::vector<state_t> children = get_children(state, black);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+    	child = children[i];
+    	if (i==0){
+    		score = scout(child, depth - 1);
+    	}else{
+    		if (black && TEST(child,score,0)){
+    			score=scout(child, depth - 1);
+    		}
+    		if (!black && !TEST(child,score,1)){
+    			score=scout(child, depth - 1);
+    		}
+    	}
+    }
 
 	return score;
 }
 
-TEST(state_t state, int depth, int score, Condition >){
-	if (depth == 0 || state.terminal()){
-		return h(node) > score ? true : false;
+// Condition 0 = >, 1 = >=
+bool TEST(state_t state, int depth, int score, int condition){
+	if (state.terminal()){
+		if (condition==0){
+			return state.value() > score ? true : false;
+		}else if(condition==1){
+			return state.value() >= score ? true : false;	
+		} 
 		
-
-		foreach child of node{
-			if( node is Max && TEST(child, depth - 1, score, >)){
-				return true;
-			}
-			if(node is Min && !TEST(child, depth - 1, score, >)){
-				return false;
-			}
-		}
-
-		return node is Max ? false : true;
 	}
+
+  	bool black = depth % 2 == 0; // black moves first!
+    std::vector<state_t> children = get_children(state, black);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+    	child = children[i];
+		if (black && TEST(child,depth - 1,0)){
+			return true;
+		}
+		if (!black && !TEST(child,depth - 1,0)){
+			return false;
+		}
+    }
+
+	return black ? false : true;
+	
 }
+
+int negascout(state_t state, int depth, int alpha, int beta, int color)
+
+	if (state.terminal()){
+		//h := heuristic(node)
+		return color * state.value();
+	}
+
+	int score;
+	
+	bool black = depth % 2 == 0; // black moves first!
+    std::vector<state_t> children = get_children(state, black);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+    	if (i==0){
+    		score = -negascout(child, depth - 1, -beta, -alpha, -color)
+    	}else{
+    		score = -negascout(child, depth - 1, -alpha - 1, -alpha, -color)
+    	}
+
+		if ((alpha < score)&&(score < beta)){
+			score = -negascout(child, depth - 1, -beta, -score, -color)
+			alpha = max(alpha, score)
+
+			if (alpha >= beta){
+				break;
+			}
+				
+		}
+	}
+
+	return alpha
