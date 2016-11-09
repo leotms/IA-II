@@ -220,9 +220,11 @@ int scout(state_t state, int depth, bool color, bool use_tt = false) {
     }
 
     int  score = 0;
+    expanded = expanded + 1;
     std::vector<state_t> children = get_children(state, color);
 
     int nchildren = children.size();
+    generated = generated + nchildren;
     state_t child;
 
     for (int i = 0; i < nchildren; ++i) {
@@ -249,10 +251,11 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
 
     int score;
     
-
+    expanded = expanded + 1;
     std::vector<state_t> children = get_children(state, color);
 
     int nchildren = children.size();
+    generated = generated + nchildren;
     state_t child;
 
     for (int i = 0; i < nchildren; ++i) {
