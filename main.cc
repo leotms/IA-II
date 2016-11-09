@@ -2,7 +2,7 @@
 // Universidad Simon Bolivar, 2012.
 // Author: Blai Bonet
 // Last Revision: 1/11/16
-// Modified by: 
+// Modified by:
 
 #include <iostream>
 #include <limits>
@@ -63,26 +63,24 @@ int minmax(state_t state, int depth, bool use_tt = false) {
     }
 
     int score = INT_MAX;
-    bool player = depth % 2 == 0; 
-    expanded = expanded + 1;
+    bool player = false; // MIN player is always white
+
+    ++expanded;
+
+    // we obtain the children states of state
     std::vector<state_t> children = get_children(state, player);
-
     int nchildren = children.size();
-    generated = generated + nchildren;
-
     state_t child;
 
-    if (nchildren == 0) {
-        score = minmax(state, depth - 1, false);
-    } else { 
-        for (int i = 0; i < nchildren; ++i) {
-            child = children[i];
-            score = min(score, maxmin(child, depth - 1, false));
-        }
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        ++generated;
+        score = min(score, maxmin(child, depth - 1, false));
     }
 
-    if (score == INT_MAX) {
-        cout << nchildren << " ---------------------- " << endl; 
+    // if the state has no children means we can play
+    if (nchildren == 0) {
+        score = maxmin(state, depth - 1, false);
     }
 
     return score;
@@ -94,27 +92,24 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
     }
 
     int  score = INT_MIN;
-    bool player = depth % 2 == 0; 
-    expanded = expanded + 1;
+    bool player = true;  // MAX player is always black
+
+    ++expanded;
+
+    // we obtain the children states of state
     std::vector<state_t> children = get_children(state, player);
-
     int nchildren = children.size();
-    generated = generated + nchildren;
-
     state_t child;
 
-    if (nchildren == 0) {
-        score = maxmin(state, depth - 1, false);
-    } else { 
-        for (int i = 0; i < nchildren; ++i) {
-            child = children[i];
-            score = max(score, minmax(child, depth - 1, false));
-        }
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        ++generated;
+        score = max(score, minmax(child, depth - 1, false));
     }
 
-
-    if (score == INT_MIN) {
-        cout << nchildren << " ---------------------- " << endl; 
+    // if the state has no children means we can play
+    if (nchildren == 0) {
+        score = minmax(state, depth - 1, false);
     }
 
     return score;
@@ -142,7 +137,7 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
     } else {
         for (int i = 0; i < nchildren; ++i) {
             child = children[i];
-            alpha = max(alpha, -negamax(child, depth - 1, -color)); 
+            alpha = max(alpha, -negamax(child, depth - 1, -color));
         }
     }
 
@@ -151,8 +146,8 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
 
 int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false){
     if (state.terminal()) {
-        int val = state.value(); 
-        return color * val; 
+        int val = state.value();
+        return color * val;
     }
 
     bool player = depth % 2 == 0;
@@ -181,7 +176,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
     }
 
     return score;
-    
+
 }
 
 // Condition 0 = >, 1 = >=
@@ -190,9 +185,9 @@ bool TEST(state_t state, int depth, int score, bool color, int condition){
         if (condition==0){
             return state.value() > score ? true : false;
         }else if(condition==1){
-            return state.value() >= score ? true : false;   
-        } 
-        
+            return state.value() >= score ? true : false;
+        }
+
     }
 
     std::vector<state_t> children = get_children(state, color);
@@ -211,7 +206,7 @@ bool TEST(state_t state, int depth, int score, bool color, int condition){
     }
 
     return !color;
-    
+
 }
 
 int scout(state_t state, int depth, bool color, bool use_tt = false) {
@@ -250,7 +245,7 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
     }
 
     int score;
-    
+
     expanded = expanded + 1;
     std::vector<state_t> children = get_children(state, color);
 
@@ -273,7 +268,7 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
             if (alpha >= beta){
                 break;
             }
-                
+
         }
     }
 
@@ -365,4 +360,3 @@ int main(int argc, const char **argv) {
 
     return 0;
 }
-
