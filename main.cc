@@ -37,9 +37,8 @@ class hash_table_t : public unordered_map<state_t, stored_info_t, hash_function_
 
 hash_table_t TTable[2];
 
-// Given a color and a state, returns all the children states for that
-// color.
-
+// Given a state and a player, returns all the children states,
+// wich represent all moves the player can do.
 std::vector<state_t> get_children(state_t state, bool player) {
 
     std::vector<state_t> children;
@@ -55,8 +54,10 @@ std::vector<state_t> get_children(state_t state, bool player) {
     return children;
 }
 
+// Forward definition for maxmin algorithm
 int maxmin(state_t state, int depth, bool use_tt);
 
+// Definition of MINMAX algorithm, this definition does not transposition tables.
 int minmax(state_t state, int depth, bool use_tt = false) {
     if (state.terminal()) {
         return state.value();
@@ -86,6 +87,7 @@ int minmax(state_t state, int depth, bool use_tt = false) {
     return score;
 }
 
+// Definition of MAXMIN algorithm, this definition does not transposition tables.
 int maxmin(state_t state, int depth, bool use_tt = false) {
     if (state.terminal()) {
         return state.value();
@@ -115,6 +117,8 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
     return score;
 }
 
+// Definition of NEGAMAX algorithm.
+// This definition does not transposition tables.
 int negamax(state_t state, int depth, int color, bool use_tt = false) {
     if (state.terminal()) {
         return color * state.value();
