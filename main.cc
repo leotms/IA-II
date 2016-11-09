@@ -184,6 +184,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
         }
     }
 
+    // means we cannot move, so we pass
     if (nchildren == 0) {
       int val = -negamax(state, depth - 1, -beta, -alpha, -color, false);
       score = max(score, val);
@@ -192,19 +193,21 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
     return score;
 }
 
-// Condition 0 = >, 1 = >=
+// Implements TEST value of a state. Used for SCOUT algorithm.
+// Conditions:
+//    0 : >
+//    1 : >=
 bool TEST(state_t state, int depth, int score, bool color, int condition){
     if (state.terminal()){
-        if (condition==0){
+        if (condition == 0){
             return state.value() > score ? true : false;
-        }else if(condition==1){
+        }else if(condition == 1){
             return state.value() >= score ? true : false;
         }
-
     }
 
+    // We get the children of the state
     std::vector<state_t> children = get_children(state, color);
-
     int nchildren = children.size();
     state_t child;
 
@@ -222,6 +225,8 @@ bool TEST(state_t state, int depth, int score, bool color, int condition){
 
 }
 
+// Implementation of SCOUT algorithm. It does not
+// use transposition tables.
 int scout(state_t state, int depth, bool color, bool use_tt = false) {
     if (state.terminal()){
         return state.value();
