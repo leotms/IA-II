@@ -8,6 +8,7 @@
 #include <limits>
 #include "othello_cut.h" // won't work correctly until .h is fixed!
 #include "utils.h"
+#include <climits>
 
 #include <unordered_map>
 
@@ -36,9 +37,64 @@ class hash_table_t : public unordered_map<state_t, stored_info_t, hash_function_
 
 hash_table_t TTable[2];
 
+// Given a color and a state, returns all the children states for that
+// color.
+
+std::vector<state_t> get_children(state_t state, bool player) {
+
+    std::vector<state_t> children;
+    state_t new_state;
+
+    for( int pos = 0; pos < DIM; ++pos ) {
+        if (state.outflank(player, pos)) {
+            new_state = state.move(player, pos);
+            children.push_back(new_state);
+        }
+    }
+
+    return children;
+}
+
 int maxmin(state_t state, int depth, bool use_tt);
-int minmax(state_t state, int depth, bool use_tt = false);
-int maxmin(state_t state, int depth, bool use_tt = false);
+
+int minmax(state_t state, int depth, bool use_tt = false) {
+    if (state.terminal()) {
+        return state.value();
+    }
+
+    int score = INT_MIN;
+    bool player = depth % 2 == 0; // black moves first!
+    std::vector<state_t> children = get_children(state, player);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        score = min(score, maxmin(child, depth - 1, false));
+    }
+    return score;
+}
+
+int maxmin(state_t state, int depth, bool use_tt = false) {
+    if (state.terminal()) {
+        return state.value();
+    }
+
+    int  score = INT_MAX;
+    bool player = depth % 2 == 0; // black moves first!
+    std::vector<state_t> children = get_children(state, player);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        score = max(score, minmax(child, depth - 1));
+    }
+    return score;
+}
+
 int negamax(state_t state, int depth, int color, bool use_tt = false);
 int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false);
 int scout(state_t state, int depth, int color, bool use_tt = false);
@@ -100,7 +156,7 @@ int main(int argc, const char **argv) {
 
         try {
             if( algorithm == 0 ) {
-                //value = color * (color == 1 ? maxmin(pv[i], 0, use_tt) : minmax(pv[i], 0, use_tt));
+                value = color * (color == 1 ? maxmin(pv[i], 0, use_tt) : minmax(pv[i], 0, use_tt));
             } else if( algorithm == 1 ) {
                 //value = negamax(pv[i], 0, color, use_tt);
             } else if( algorithm == 2 ) {

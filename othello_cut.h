@@ -115,7 +115,7 @@ class state_t {
     bool is_free(int pos) const { return pos < 4 ? false : !(free_ & (1 << (pos - 4))); }
     bool is_full() const { return ~free_ == 0; }
 
-    int value() const;
+    int  value() const;
     bool terminal() const;
     bool outflank(bool color, int pos) const;
     bool is_black_move(int pos) const { return (pos == DIM) || outflank(true, pos); }
@@ -200,7 +200,7 @@ inline bool state_t::outflank(bool color, int pos) const {
         if( (p < x - 1) && (p >= cols[pos - 4]) && !is_free(*p) ) return true;
     }
 
-    // Check columns
+    // Check diag1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -212,7 +212,7 @@ inline bool state_t::outflank(bool color, int pos) const {
         if( (p < x - 1) && (p >= dia1[pos - 4]) && !is_free(*p) ) return true;
     }
 
-    // Check columns
+    // Check diag2
     x = dia2[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -286,7 +286,7 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
-    // Process columns
+    // Process diag1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -302,7 +302,7 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
-        // Process columns
+        // Process diag2
     x = dia2[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
