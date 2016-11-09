@@ -159,23 +159,21 @@ bool TEST(state_t state, int depth, int score, int condition){
 	
 }
 
-int negascout(state_t state, int depth, int alpha, int beta, int color)
-
+int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false) {
 	if (state.terminal()){
-		//h := heuristic(node)
 		return color * state.value();
 	}
 
 	int score;
 	
-	bool black = depth % 2 == 0; // black moves first!
-    std::vector<state_t> children = get_children(state, black);
+
+    std::vector<state_t> children = get_children(state, color);
 
     int nchildren = children.size();
     state_t child;
 
     for (int i = 0; i < nchildren; ++i) {
-    	if (i==0){
+    	if (i == 0){
     		score = -negascout(child, depth - 1, -beta, -alpha, -color)
     	}else{
     		score = -negascout(child, depth - 1, -alpha - 1, -alpha, -color)
@@ -193,3 +191,4 @@ int negascout(state_t state, int depth, int alpha, int beta, int color)
 	}
 
 	return alpha
+}

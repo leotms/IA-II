@@ -170,6 +170,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
         score = negamax(state, depth - 1, beta, alpha, color, false);
     } else {
         for (int i = 0; i < nchildren; ++i) {
+            child =  children[i];
             int val = -negamax(child, depth - 1, -beta, -alpha, -color, false);
             score = max(score, val);
             alpha = max(alpha, val);
@@ -241,7 +242,40 @@ int scout(state_t state, int depth, bool color, bool use_tt = false) {
     return score;
 }
 
-int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false);
+int negascout(state_t state, int depth, int alpha, int beta, int color, bool use_tt = false) {
+    if (state.terminal()){
+        return color * state.value();
+    }
+
+    int score;
+    
+
+    std::vector<state_t> children = get_children(state, color);
+
+    int nchildren = children.size();
+    state_t child;
+
+    for (int i = 0; i < nchildren; ++i) {
+        child = children[i];
+        if (i == 0){
+            score = -(negascout(child, depth - 1, -beta, -alpha, -color));
+        }else{
+            score = -(negascout(child, depth - 1, -alpha - 1, -alpha, -color));
+        }
+
+        if ((alpha < score)&&(score < beta)){
+            score = -(negascout(child, depth - 1, -beta, -score, -color));
+            alpha = max(alpha, score);
+
+            if (alpha >= beta){
+                break;
+            }
+                
+        }
+    }
+
+    return alpha;
+}
 
 int main(int argc, const char **argv) {
     state_t pv[128];
@@ -307,7 +341,7 @@ int main(int argc, const char **argv) {
             } else if( algorithm == 3 ) {
                 value = scout(pv[i], 0, color, use_tt);
             } else if( algorithm == 4 ) {
-                //value = negascout(pv[i], 0, -200, 200, color, use_tt);
+                value = negascout(pv[i], 0, -200, 200, color, use_tt);
             }
         } catch( const bad_alloc &e ) {
             cout << "size TT[0]: size=" << TTable[0].size() << ", #buckets=" << TTable[0].bucket_count() << endl;
