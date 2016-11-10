@@ -233,16 +233,18 @@ int scout(state_t state, int depth, bool color, bool use_tt = false) {
     }
 
     int  score = 0;
-    expanded = expanded + 1;
-    std::vector<state_t> children = get_children(state, color);
+    ++expanded;
 
+    // we get the clindren states of state
+    std::vector<state_t> children = get_children(state, color);
     int nchildren = children.size();
-    generated = generated + nchildren;
     state_t child;
 
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
-        if (i==0){
+        ++generated;
+        // if it is the first child
+        if (i == 0){
             score = scout(child, depth - 1, !color, false);
         }else{
             if (color && TEST(child, depth - 1, score, !color, 0)){
@@ -252,6 +254,10 @@ int scout(state_t state, int depth, bool color, bool use_tt = false) {
                 score=scout(child, depth - 1, !color, false);
             }
         }
+    }
+
+    if (nchildren == 0) {
+      score = scout(state, depth - 1, !color, false);
     }
 
     return score;
