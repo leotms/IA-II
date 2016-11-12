@@ -1,0 +1,23 @@
+Algorithm: Scout
+Moving along PV:
+34. White moves: value=-4, #expanded=0, #generated=0, seconds=0, #generated/second=-nan
+33. Black moves: value=-4, #expanded=1, #generated=1, seconds=0, #generated/second=inf
+32. White moves: value=-4, #expanded=2, #generated=3, seconds=0, #generated/second=inf
+31. Black moves: value=-4, #expanded=3, #generated=3, seconds=0, #generated/second=inf
+30. White moves: value=-4, #expanded=8, #generated=10, seconds=0, #generated/second=inf
+29. Black moves: value=-4, #expanded=9, #generated=11, seconds=0, #generated/second=inf
+28. White moves: value=-4, #expanded=10, #generated=14, seconds=0, #generated/second=inf
+27. Black moves: value=-4, #expanded=11, #generated=16, seconds=0, #generated/second=inf
+26. White moves: value=-4, #expanded=42, #generated=69, seconds=0, #generated/second=inf
+25. Black moves: value=-4, #expanded=152, #generated=266, seconds=0.004, #generated/second=66500
+24. White moves: value=-4, #expanded=199, #generated=343, seconds=0.004, #generated/second=85750
+23. Black moves: value=-4, #expanded=245, #generated=421, seconds=0.004, #generated/second=105250
+22. White moves: value=-4, #expanded=580, #generated=955, seconds=0.012, #generated/second=79583.3
+21. Black moves: value=-4, #expanded=1520, #generated=2388, seconds=0.044, #generated/second=54272.7
+20. White moves: value=-4, #expanded=1777, #generated=2934, seconds=0.064, #generated/second=45843.8
+19. Black moves: value=-4, #expanded=2144, #generated=3601, seconds=0.156, #generated/second=23083.3
+18. White moves: value=-4, #expanded=4944, #generated=7976, seconds=0.492, #generated/second=16211.4
+17. Black moves: value=-4, #expanded=5637, #generated=9265, seconds=0.916, #generated/second=10114.6
+16. White moves: value=-4, #expanded=34050, #generated=56554, seconds=6.312, #generated/second=8959.76
+15. Black moves: value=-4, #expanded=71785, #generated=120922, seconds=24.14, #generated/second=5009.2
+14. White moves: value=-4, #expanded=107191, #generated=179148, seconds=85.164, #generated/second=2103.56

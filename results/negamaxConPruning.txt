@@ -1,0 +1,23 @@
+Algorithm: Negamax (alpha-beta version)
+Moving along PV:
+34. White moves: value=-4, #expanded=0, #generated=0, seconds=0, #generated/second=-nan
+33. Black moves: value=-4, #expanded=1, #generated=1, seconds=0, #generated/second=inf
+32. White moves: value=-4, #expanded=3, #generated=4, seconds=0, #generated/second=inf
+31. Black moves: value=-4, #expanded=4, #generated=4, seconds=0, #generated/second=inf
+30. White moves: value=-4, #expanded=9, #generated=11, seconds=0, #generated/second=inf
+29. Black moves: value=-4, #expanded=10, #generated=12, seconds=0, #generated/second=inf
+28. White moves: value=-4, #expanded=21, #generated=23, seconds=0, #generated/second=inf
+27. Black moves: value=-4, #expanded=62, #generated=74, seconds=0.004, #generated/second=18500
+26. White moves: value=-4, #expanded=186, #generated=210, seconds=0, #generated/second=inf
+25. Black moves: value=-4, #expanded=769, #generated=894, seconds=0, #generated/second=inf
+24. White moves: value=-4, #expanded=1152, #generated=1338, seconds=0.004, #generated/second=334500
+23. Black moves: value=-4, #expanded=3168, #generated=3578, seconds=0.012, #generated/second=298167
+22. White moves: value=-4, #expanded=7031, #generated=8095, seconds=0.02, #generated/second=404750
+21. Black moves: value=-4, #expanded=76021, #generated=87283, seconds=0.224, #generated/second=389656
+20. White moves: value=-4, #expanded=98129, #generated=112358, seconds=0.288, #generated/second=390132
+19. Black moves: value=-4, #expanded=205017, #generated=234268, seconds=0.6, #generated/second=390447
+18. White moves: value=-4, #expanded=960343, #generated=1124390, seconds=2.948, #generated/second=381408
+17. Black moves: value=-4, #expanded=1549785, #generated=1811274, seconds=5.436, #generated/second=333200
+16. White moves: value=-4, #expanded=22325108, #generated=26557311, seconds=62.712, #generated/second=423481
+15. Black moves: value=-4, #expanded=32949019, #generated=39439080, seconds=98.728, #generated/second=399472
+14. White moves: value=-4, #expanded=82016158, #generated=97517568, seconds=234.212, #generated/second=416365

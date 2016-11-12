@@ -1,0 +1,18 @@
+Algorithm: Negamax (minmax version)
+Moving along PV:
+34. White moves: value=-4, #expanded=0, #generated=0, seconds=0, #generated/second=-nan
+33. Black moves: value=-4, #expanded=1, #generated=1, seconds=0, #generated/second=inf
+32. White moves: value=-4, #expanded=3, #generated=4, seconds=0, #generated/second=inf
+31. Black moves: value=-4, #expanded=4, #generated=4, seconds=0, #generated/second=inf
+30. White moves: value=-4, #expanded=9, #generated=11, seconds=0, #generated/second=inf
+29. Black moves: value=-4, #expanded=10, #generated=12, seconds=0, #generated/second=inf
+28. White moves: value=-4, #expanded=64, #generated=84, seconds=0, #generated/second=inf
+27. Black moves: value=-4, #expanded=125, #generated=162, seconds=0, #generated/second=inf
+26. White moves: value=-4, #expanded=744, #generated=934, seconds=0, #generated/second=inf
+25. Black moves: value=-4, #expanded=3168, #generated=4030, seconds=0.012, #generated/second=335833
+24. White moves: value=-4, #expanded=8597, #generated=10475, seconds=0.016, #generated/second=654688
+23. Black moves: value=-4, #expanded=55127, #generated=66687, seconds=0.128, #generated/second=520992
+22. White moves: value=-4, #expanded=308479, #generated=377424, seconds=0.68, #generated/second=555035
+21. Black moves: value=-4, #expanded=2525249, #generated=3015556, seconds=5.736, #generated/second=525725
+20. White moves: value=-4, #expanded=9459570, #generated=11321961, seconds=22.08, #generated/second=512770
+19. Black moves: value=-4, #expanded=65121519, #generated=78915639, seconds=162.848, #generated/second=484597
