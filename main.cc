@@ -81,12 +81,12 @@ int minmax(state_t state, int depth, bool use_tt = false) {
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
         ++generated;
-        score = min(score, maxmin(child, depth - 1, false));
+        score = min(score, maxmin(child, depth + 1, false));
     }
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
-        score = maxmin(state, depth - 1, false);
+        score = maxmin(state, depth + 1, false);
     }
 
     return score;
@@ -111,12 +111,12 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
         ++generated;
-        score = max(score, minmax(child, depth - 1, false));
+        score = max(score, minmax(child, depth + 1, false));
     }
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
-        score = minmax(state, depth - 1, false);
+        score = minmax(state, depth + 1, false);
     }
 
     return score;
@@ -146,12 +146,12 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
         ++generated;
-        alpha = max(alpha, -negamax(child, depth - 1, -color));
+        alpha = max(alpha, -negamax(child, depth + 1, -color));
     }
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
-        alpha = max(alpha, -negamax(state, depth - 1, -color));
+        alpha = max(alpha, -negamax(state, depth + 1, -color));
     }
 
     return alpha;
@@ -181,7 +181,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
     for (int i = 0; i < nchildren; ++i) {
         child =  children[i];
         ++generated;
-        int val = -negamax(child, depth - 1, -beta, -alpha, -color, false);
+        int val = -negamax(child, depth + 1, -beta, -alpha, -color, false);
         score = max(score, val);
         alpha = max(alpha, val);
         if(alpha >= beta){
@@ -191,7 +191,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
-      int val = -negamax(state, depth - 1, -beta, -alpha, -color, false);
+      int val = -negamax(state, depth + 1, -beta, -alpha, -color, false);
       score = max(score, val);
     }
 
@@ -223,11 +223,11 @@ bool test(state_t state, int depth, int score, int color, int condition){
         child = children[i];
 
         //state is a MAX state
-        if (color == 1  && test(child, depth - 1, score, -color, condition)){
+        if (color == 1  && test(child, depth + 1, score, -color, condition)){
             return true;
         }
         //state is a MIN state
-        if (color == -1 && !test(child, depth - 1, score, -color, condition)){
+        if (color == -1 && !test(child, depth + 1, score, -color, condition)){
             return false;
         }
     }
@@ -235,11 +235,11 @@ bool test(state_t state, int depth, int score, int color, int condition){
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
         //state is a MAX state
-        if (color == 1  && test(state, depth - 1, score, -color, condition)){
+        if (color == 1  && test(state, depth + 1, score, -color, condition)){
             return true;
         }
         //state is a MIN state
-        if (color == -1 && !test(state, depth - 1, score, -color, condition)){
+        if (color == -1 && !test(state, depth + 1, score, -color, condition)){
             return false;
         }
     }
@@ -271,22 +271,22 @@ int scout(state_t state, int depth, int color, bool use_tt = false) {
 
         // check the first child to get the bound
         if (i == 0) {
-            score = scout(child, depth - 1, -color, false);
+            score = scout(child, depth + 1, -color, false);
         } else {
             //State is a MAX state.
-            if (color == 1 && test(child, depth - 1, score, -color, 0)){
-                score = scout(child, depth - 1, -color, false);
+            if (color == 1 && test(child, depth + 1, score, -color, 0)){
+                score = scout(child, depth + 1, -color, false);
             }
             //State is a MIN state.
-            if (color == -1 && !test(child, depth - 1, score, -color, 1)){
-                score = scout(child, depth - 1, -color, false);
+            if (color == -1 && !test(child, depth + 1, score, -color, 1)){
+                score = scout(child, depth + 1, -color, false);
             }
         }
     }
 
     //The player can't make moves, so we check the other player's turn
     if (nchildren == 0) {
-      score = scout(state, depth - 1, -color, false);
+      score = scout(state, depth + 1, -color, false);
     }
 
     return score;
@@ -300,31 +300,43 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
     }
 
     int score;
+    bool player = color == 1;
 
-    expanded = expanded + 1;
-    std::vector<state_t> children = get_children(state, color);
+    ++expanded;
 
+    // we get the clindren states of state for player's turn
+    std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
-    generated = generated + nchildren;
     state_t child;
 
     for (int i = 0; i < nchildren; ++i) {
+
         child = children[i];
-        if (i == 0){
-            score = -(negascout(child, depth - 1, -beta, -alpha, -color));
-        }else{
-            score = -(negascout(child, depth - 1, -alpha - 1, -alpha, -color));
-        }
+        ++generated;
 
-        if ((alpha < score)&&(score < beta)){
-            score = -(negascout(child, depth - 1, -beta, -score, -color));
-            alpha = max(alpha, score);
+        // check the first child to get the bound
+        if (i == 0) {
+            score = -negascout(child, depth + 1, -beta, -alpha, -color);
+        } else {
+            score = -negascout(child, depth + 1, -alpha - 1, -alpha, -color);
 
-            if (alpha >= beta){
-                break;
+            if ((alpha < score)&&(score < beta)) {
+                score = -negascout(child, depth + 1, -beta, -score, -color);
             }
-
         }
+
+        alpha = max(alpha, score);
+
+        if (alpha >= beta){
+            break;
+        }
+
+    }
+
+    //The player can't make moves, so we check the other player's turn
+    if (nchildren == 0) {
+      score = -negascout(state, depth + 1, -beta, -alpha, -color);
+      alpha = max(alpha, score);
     }
 
     return alpha;
