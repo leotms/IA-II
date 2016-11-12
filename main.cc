@@ -404,7 +404,7 @@ int main(int argc, const char **argv) {
             } else if( algorithm == 2 ) {
                 value = negamax(pv[i], 0, -200, 200, color, use_tt);
             } else if( algorithm == 3 ) {
-                value = scout(pv[i], 0, color, use_tt);
+                value = color * scout(pv[i], 0, color, use_tt);
             } else if( algorithm == 4 ) {
                 value = negascout(pv[i], 0, -200, 200, color, use_tt);
             }
