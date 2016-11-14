@@ -86,6 +86,7 @@ int minmax(state_t state, int depth, bool use_tt = false) {
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
+        ++generated;
         score = maxmin(state, depth + 1, false);
     }
 
@@ -116,6 +117,7 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
+        ++generated;
         score = minmax(state, depth + 1, false);
     }
 
@@ -151,6 +153,7 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
+        ++generated;
         alpha = max(alpha, -negamax(state, depth + 1, -color));
     }
 
@@ -191,6 +194,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
+      ++generated;  
       int val = -negamax(state, depth + 1, -beta, -alpha, -color, false);
       score = max(score, val);
     }
@@ -286,6 +290,7 @@ int scout(state_t state, int depth, int color, bool use_tt = false) {
 
     //The player can't make moves, so we check the other player's turn
     if (nchildren == 0) {
+      ++generated;  
       score = scout(state, depth + 1, -color, false);
     }
 
@@ -335,6 +340,7 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
 
     //The player can't make moves, so we check the other player's turn
     if (nchildren == 0) {
+      ++generated;  
       score = -negascout(state, depth + 1, -beta, -alpha, -color);
       alpha = max(alpha, score);
     }
