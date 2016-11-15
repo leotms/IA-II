@@ -6,7 +6,7 @@
 //  - Leonardo Martinez
 //  - Nicolas Manan
 //  - Joel Rivas
-// Last Modification: 11/11/16
+// Last Modification: 14/11/16
 
 #include <iostream>
 #include <limits>
@@ -71,12 +71,12 @@ int minmax(state_t state, int depth, bool use_tt = false) {
     int score = INT_MAX;
     bool player = false; // MIN player is always white
 
-    ++expanded;
-
     // We get the children of the state for the player turn
     std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
     state_t child;
+
+    ++expanded;
 
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
@@ -102,12 +102,12 @@ int maxmin(state_t state, int depth, bool use_tt = false) {
     int  score = INT_MIN;
     bool player = true;  // MAX player is always black
 
-    ++expanded;
-
     // We get the children of the state for the player turn
     std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
     state_t child;
+
+    ++expanded;
 
     for (int i = 0; i < nchildren; ++i) {
         child = children[i];
@@ -136,12 +136,12 @@ int negamax(state_t state, int depth, int color, bool use_tt = false) {
     // color 1 is for black player
     bool player = color == 1;
 
-    ++expanded;
-
     // We get the children of the state for the player turn
     std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
     state_t child;
+
+    ++expanded;
 
     int alpha = INT_MIN;
 
@@ -172,12 +172,12 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
     // color 1 is for black player
     bool player = color == 1;
 
-    ++expanded;
-
     // We get the children of the state for the player turn
     std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
     state_t child;
+
+    ++expanded;
 
     int score = INT_MIN;
 
@@ -194,7 +194,7 @@ int negamax(state_t state, int depth, int alpha, int beta, int color, bool use_t
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
-      ++generated;  
+      ++generated;
       int val = -negamax(state, depth + 1, -beta, -alpha, -color, false);
       score = max(score, val);
     }
@@ -222,9 +222,12 @@ bool test(state_t state, int depth, int score, int color, int condition){
     int nchildren = children.size();
     state_t child;
 
+    ++expanded;
+
     for (int i = 0; i < nchildren; ++i) {
 
         child = children[i];
+        ++generated;
 
         //state is a MAX state
         if (color == 1  && test(child, depth + 1, score, -color, condition)){
@@ -291,7 +294,7 @@ int scout(state_t state, int depth, int color, bool use_tt = false) {
 
     //The player can't make moves, so we check the other player's turn
     if (nchildren == 0) {
-      ++generated;  
+      ++generated;
       score = scout(state, depth + 1, -color, false);
     }
 
@@ -308,12 +311,12 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
     int score;
     bool player = color == 1;
 
-    ++expanded;
-
     // we get the clindren states of state for player's turn
     std::vector<state_t> children = get_children(state, player);
     int nchildren = children.size();
     state_t child;
+
+    ++expanded;
 
     for (int i = 0; i < nchildren; ++i) {
 
@@ -341,7 +344,7 @@ int negascout(state_t state, int depth, int alpha, int beta, int color, bool use
 
     //The player can't make moves, so we check the other player's turn
     if (nchildren == 0) {
-      ++generated;  
+      ++generated;
       score = -negascout(state, depth + 1, -beta, -alpha, -color);
       alpha = max(alpha, score);
     }

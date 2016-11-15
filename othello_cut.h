@@ -1,17 +1,17 @@
 /*
  *  Copyright (C) 2012 Universidad Simon Bolivar
- * 
+ *
  *  Permission is hereby granted to distribute this software for
  *  non-commercial research purposes, provided that this copyright
  *  notice is included with any such distribution.
- *  
+ *
  *  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
  *  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  *  PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
  *  SOFTWARE IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU
  *  ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
- *  
+ *
  *  Blai Bonet, bonet@ldc.usb.ve
  *
  *  Last revision: 1/11/2016
@@ -92,7 +92,7 @@ static int PV[] = {
 };
 
 class state_t {
-    unsigned char t_; 
+    unsigned char t_;
     unsigned free_;
     unsigned pos_;
 
@@ -200,6 +200,8 @@ inline bool state_t::outflank(bool color, int pos) const {
         if( (p < x - 1) && (p >= cols[pos - 4]) && !is_free(*p) ) return true;
     }
 
+    // completed outflank check for both diag1 and diag2.
+    
     // Check diag1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
@@ -286,6 +288,7 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
+    // completed process for both diag1 and diag2.
     // Process diag1
     x = dia1[pos - 4];
     while( *x != pos ) ++x;
@@ -302,7 +305,7 @@ inline state_t state_t::move(bool color, int pos) const {
         }
     }
 
-        // Process diag2
+    // Process diag2
     x = dia2[pos - 4];
     while( *x != pos ) ++x;
     if( *(x+1) != -1 ) {
@@ -359,4 +362,3 @@ inline std::ostream& operator<<(std::ostream &os, const state_t &state) {
     state.print(os);
     return os;
 }
-
