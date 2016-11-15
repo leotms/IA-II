@@ -238,6 +238,7 @@ bool test(state_t state, int depth, int score, int color, int condition){
 
     // The player can't make moves, so we check the other player's turn.
     if (nchildren == 0) {
+        ++generated;
         //state is a MAX state
         if (color == 1  && test(state, depth + 1, score, -color, condition)){
             return true;
